@@ -9,3 +9,4 @@ streamlit==1.14.1
 torch==1.12.1
 torchmetrics==0.10.0
 tqdm==4.64.1
+tensorflow==2.10.0
