@@ -178,23 +178,19 @@ class NewsDataModule(pl.LightningDataModule):
     def tokenizer(self):
         if os.path.exists(self.tokenizer_path):
             with open(self.tokenizer_path, 'rb') as handle:
-                tokenizer = pickle.load(handle)
-
-            sequences = tokenizer.texts_to_sequences(self.dataset['title'])
-            list_set_sequence = [list(dict.fromkeys(seq)) for seq in sequences]
-            max_len = max(len(x) for x in list_set_sequence)
+                max_len, tokenizer = pickle.load(handle)
 
             return max_len, tokenizer
         else:
             tokenizer = Tokenizer()
             tokenizer.fit_on_texts(self.dataset['title'])
 
-            with open(self.tokenizer_path, 'wb') as handle:
-                pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
             sequences = tokenizer.texts_to_sequences(self.dataset['title'])
             list_set_sequence = [list(dict.fromkeys(seq)) for seq in sequences]
             max_len = max(len(x) for x in list_set_sequence)
+
+            with open(self.tokenizer_path, 'wb') as handle:
+                pickle.dump([max_len, tokenizer], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
             return max_len, tokenizer
 
