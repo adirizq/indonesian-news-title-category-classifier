@@ -11,7 +11,7 @@ st.set_page_config(page_title="Indonesian News Title Category Classifier", page_
 @st.cache(allow_output_mutation=True, show_spinner=False, ttl=3600, max_entries=10)
 def build_model():
     with st.spinner("Loading models... this may take awhile! \n Don't stop it!"):
-        inference = build_model()
+        inference = Prediction()
     return inference
 
 inference = build_model()
