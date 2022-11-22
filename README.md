@@ -1,9 +1,10 @@
 # Indonesian News Title Category CLassifier
 > This is my final project for Information Retrieval Course
+
 Want to give it a try? Try it now on [![Streamlit Cloud](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://indonesian-news-title-category-classifier.streamlit.app/)
 
 ## Dataset
-[Indonesian News Title](https://www.kaggle.com/datasets/ibamibrahim/indonesian-news-title) by Ibrahim on Kaggle. This dataset contains **91,017** Indonesian News Title with size of **16.1 MB**.
+[Indonesian News Title](https://www.kaggle.com/datasets/ibamibrahim/indonesian-news-title) by Ibrahim on Kaggle. This dataset contains **91,017** Indonesian News Title caregorized into **9** labels ('finance', 'food', 'health', 'hot', 'inet', 'news', 'oto', 'sport', 'travel').
 
 ### Example
 | Date  | Url | Title | Category |
@@ -18,8 +19,35 @@ Want to give it a try? Try it now on [![Streamlit Cloud](https://static.streamli
 | [Word2Vec](https://radimrehurek.com/gensim/models/word2vec.html) + [LSTM](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html) | 89.16% | 0.4327 | 0.4741 |
 | [Word2Vec](https://radimrehurek.com/gensim/models/word2vec.html) + [CNN 1D](https://pytorch.org/docs/stable/generated/torch.nn.Conv1d.html) | 88.53% | 0.4324 | 0.5803 |
 
+## Project Structure
+```bash
+├── datasets
+│   ├── preprocessed
+│   │   ├── data.pkl
+│   └── indonesian-news-title.csv
+├── models
+│   ├── cnn.py
+│   ├── lstm.py
+│   ├── inference.py
+│   └── w2v_matrix.pkl
+├── utils
+│   ├── preprocessor.py
+│   └── tokenizer.pkl
+├── app.py
+├── train_cnn.py
+├── train_lstm.py
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
 
-## Streamlit demo
+## Streamlit Demo
 ```bash
 streamlit run app.py
 ```
+
+## Author
+[Rizky Adi](https://www.linkedin.com/in/rizky-adi-7b008920b/)
+
+
+Last update: 22 November 2022
