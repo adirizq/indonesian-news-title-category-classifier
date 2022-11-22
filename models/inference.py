@@ -4,6 +4,7 @@ import nltk
 import string
 import torch
 import pickle
+import urllib.request
 
 from nltk.corpus import stopwords
 from keras.utils import pad_sequences
@@ -24,7 +25,11 @@ class Prediction():
         with open('utils/tokenizer.pkl', 'rb') as handle:
             self.max_len, self.tokenizer = pickle.load(handle)
 
-        self.model = LSTM.load_from_checkpoint('checkpoints/lstm/epoch=18-step=9728.ckpt', word_embedding_weigth=embedding_matrix)
+        url='https://github.com/adirizq/data/releases/download/news_title_classifier/lstm_weight.ckpt'
+        filename = url.split('/')[-1]
+        urllib.request.urlretrieve(url, f'models/{filename}')
+
+        self.model = LSTM.load_from_checkpoint(f'models/{filename}', word_embedding_weigth=embedding_matrix)
         self.model.eval()
 
         nltk.download('stopwords')
