@@ -8,10 +8,11 @@ from models.inference import Prediction
 st.set_page_config(page_title="Indonesian News Title Category Classifier", page_icon="🗞️", layout="centered")
 
 
-@st.cache(persist=True, allow_output_mutation=True, show_spinner=False)
+@st.cache(allow_output_mutation=True, show_spinner=False, ttl=3600, max_entries=10)
 def build_model():
-    return Prediction()
-
+    with st.spinner("Loading models... this may take awhile! \n Don't stop it!"):
+        inference = build_model()
+    return inference
 
 inference = build_model()
 
