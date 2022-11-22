@@ -30,6 +30,7 @@ class NewsDataModule(pl.LightningDataModule):
                  w2v_model_path='models/w2v/idwiki_word2vec_200_new_lower.model',
                  preprocessed_data_path='datasets/preprocessed/data.pkl',
                  tokenizer_path='utils/tokenizer.pkl',
+                 embedding_matrix_path='models/w2v_matrix.pkl',
                  batch_size=64,):
 
         super(NewsDataModule, self).__init__()
@@ -39,6 +40,7 @@ class NewsDataModule(pl.LightningDataModule):
         self.preprocessed_data_path = preprocessed_data_path
         self.tokenizer_path = tokenizer_path
         self.batch_size = batch_size
+        self.embedding_matrix_path = embedding_matrix_path
 
         if os.path.exists(preprocessed_data_path):
             print("\nLoading Preprocessed Data...")
@@ -140,29 +142,38 @@ class NewsDataModule(pl.LightningDataModule):
         return train_data, valid_data, test_data
 
     def word_embedding(self):
-        print('Loading Word2Vec Model...')
-        w2v_model = word2vec.Word2Vec.load(self.w2v_model_path)
-        w2v_weights = w2v_model.wv
-        print('[Loading Completed]\n')
+        if os.path.exists(self.embedding_matrix_path):
+            with open(self.embedding_matrix_path, 'rb') as handle:
+                embedding_matrix = pickle.load(handle)
 
-        tokenizer = Tokenizer()
-        tokenizer.fit_on_texts(self.dataset['title'])
+            return embedding_matrix
+        else:
+            print('Loading Word2Vec Model...')
+            w2v_model = word2vec.Word2Vec.load(self.w2v_model_path)
+            w2v_weights = w2v_model.wv
+            print('[Loading Completed]\n')
 
-        jumlah_index = len(tokenizer.word_index) + 1
+            tokenizer = Tokenizer()
+            tokenizer.fit_on_texts(self.dataset['title'])
 
-        embedding_matrix = np.zeros((jumlah_index, w2v_weights.vectors.shape[1]))
-        print('Creating Embedding Matrix...')
-        for word, i in tqdm(tokenizer.word_index.items(), desc='Creating W2V Weigth'):
-            try:
-                embedding_vector = w2v_weights[word]
-                embedding_matrix[i] = embedding_vector
-            except KeyError:
-                embedding_matrix[i] = np.random.normal(0, np.sqrt(0.25), 200)
-        print('[Embedding Matrix Completed]\n')
+            jumlah_index = len(tokenizer.word_index) + 1
 
-        del (w2v_weights)
+            embedding_matrix = np.zeros((jumlah_index, w2v_weights.vectors.shape[1]))
+            print('Creating Embedding Matrix...')
+            for word, i in tqdm(tokenizer.word_index.items(), desc='Creating W2V Weigth'):
+                try:
+                    embedding_vector = w2v_weights[word]
+                    embedding_matrix[i] = embedding_vector
+                except KeyError:
+                    embedding_matrix[i] = np.random.normal(0, np.sqrt(0.25), 200)
+            print('[Embedding Matrix Completed]\n')
 
-        return embedding_matrix
+            del (w2v_weights)
+
+            with open(self.embedding_matrix_path, 'wb') as handle:
+                pickle.dump(embedding_matrix, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+            return embedding_matrix
 
     def tokenizer(self):
         if os.path.exists(self.tokenizer_path):
