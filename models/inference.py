@@ -3,11 +3,11 @@ import re
 import nltk
 import string
 import torch
+import pickle
 
 from nltk.corpus import stopwords
 from keras.utils import pad_sequences
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-from utils.preprocessor import NewsDataModule
 from models.lstm import LSTM
 
 
@@ -18,11 +18,13 @@ class Prediction():
 
         self.labels = ['Finance', 'Food', 'Health', 'Hot', 'Inet', 'News', 'Oto', 'Sport', 'Travel']
 
-        data_module = NewsDataModule(batch_size=128)
-        self.max_len, self.tokenizer = data_module.tokenizer()
-        weigths = data_module.word_embedding()
+        with open('models/w2v_matrix.pkl', 'rb') as handle:
+            embedding_matrix = pickle.load(handle)
 
-        self.model = LSTM.load_from_checkpoint('checkpoints/lstm/epoch=18-step=9728.ckpt', word_embedding_weigth=weigths)
+        with open('utils/tokenizer.pkl', 'rb') as handle:
+            self.max_len, self.tokenizer = pickle.load(handle)
+
+        self.model = LSTM.load_from_checkpoint('checkpoints/lstm/epoch=18-step=9728.ckpt', word_embedding_weigth=embedding_matrix)
         self.model.eval()
 
         nltk.download('stopwords')
