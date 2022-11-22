@@ -18,7 +18,7 @@ inference = build_model()
 
 st.title('🗞️ Indonesian News Title Category Classifier')
 
-with st.expander('📝 About this app', expanded=True):
+with st.expander('📋 About this app', expanded=True):
     st.markdown("""
     * Indonesian News Title Category Classifier app is an easy-to-use tool that allows you to predict the category of a given news title.
     * You can predict one title at a time or upload .csv file to bulk predict.
