@@ -32,7 +32,7 @@ with st.expander('🧠 About prediction model', expanded=False):
     * Model are trained using [LSTM](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html) based on [Indonesian News Title Dataset](https://www.kaggle.com/datasets/ibamibrahim/indonesian-news-title) from Ibrahim on Kaggle.
     * Supported categories are **Finance, Food, Health, Hot, Inet, News, Oto, Sport, Travel**
     * Model test accuracy is **~89%**.
-    * **[Source Code](https://github.com/adirizq/indonesian-review-rating-prediction)**
+    * **[Source Code](https://github.com/adirizq/indonesian-news-title-category-classifier)**
     """)
     st.markdown(' ')
 
